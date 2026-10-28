@@ -8,7 +8,8 @@ EXCLUDED = {'.git', '.idea', '__pycache__', '.venv', 'venv', '.codex-work', '.su
 
 
 def python_files():
-    return sorted(p for p in ROOT.rglob('*.py') if not EXCLUDED.intersection(p.relative_to(ROOT).parts))
+    files = (p for p in ROOT.rglob('*.py') if not EXCLUDED.intersection(p.relative_to(ROOT).parts))
+    return sorted(files, key=lambda path: path.relative_to(ROOT).as_posix())
 
 
 def render():

@@ -50,8 +50,8 @@
 
 - [x] Parse all Python source without importing it; check documentation links and inventory coverage.
 - [x] Verify asset hashes and reference snapshots; ensure no accidental gitlinks or local metadata.
-- [ ] Review the complete staged update, including all original files.
-- [ ] Commit and push as a fast-forward of the original main; verify remote contents and commit.
+- [x] Review the complete staged update, including all original files.
+- [x] Commit and push as a fast-forward of the original main; verify remote contents and commit.
 
 ## Execution record
 
@@ -60,3 +60,4 @@
 - Validation boundary: offline regression tests, syntax, links, hashes, dependency resolution and repository contents; no robot motion, camera access, model deserialization or ROS execution.
 - Review resolution: stop requests now originate in the worker's motion failure path, so UI inference cannot delay an already-detected motion fault. The concurrency test uses readiness/event synchronization.
 - Runtime decisions: monitor-only default; --sort enables motion; one component per fresh image; default speed/acceleration 0.2/0.5 and vacuum setpoint 60. These are documented changes, not validated hardware settings.
+- Publication verification: initial commit 909c55a was pushed to main and a clean local clone passed all 28 runtime tests and preservation checks. Linux CI then exposed platform-dependent Path ordering in the generated index; a failing cross-platform regression was added and the generator changed to explicit POSIX-string sorting.
