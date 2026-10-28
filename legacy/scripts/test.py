@@ -75,9 +75,9 @@ def move_to_tcp(target_tcp):
         tool_acc, tool_vel)
     tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     tcp_socket.connect((HOST, PORT))
-    tcp_socket.send(str.encode(tcp_command))  # 利用字符串的encode方法编码成bytes，默认为utf-8类型
+    tcp_socket.send(str.encode(tcp_command))  # Encode the command as bytes using the default UTF-8 encoding.
     tcp_socket.close()
-    # 确保已达到目标点，就可以紧接着发送下一条指令
+    # Wait until the target is reached before sending the next command.
     actual_pos = get_current_tcp()
     target_rpy = util.rv2rpy(target_tcp[3], target_tcp[4], target_tcp[5])
     rpy = util.rv2rpy(actual_pos[3], actual_pos[4], actual_pos[5])

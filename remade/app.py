@@ -47,6 +47,11 @@ def main(argv=None):
             setup.callback(camera.close)
             robot = None
             if args.sort:
+                # Verify capture, inference and display before any motion. This
+                # observation is discarded; selection happens after homing.
+                preview = detector(camera.read())
+                if not display.show(preview.frame, 'CHECKING'):
+                    return 0
                 robot = Sorter(URSocket(settings, stop), VacuumController(settings, args.serial_device), stop)
                 setup.callback(robot.close)
             setup.pop_all()

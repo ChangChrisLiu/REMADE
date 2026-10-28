@@ -10,6 +10,17 @@ from remade.monitor import StopRequested
 
 
 class RobotTests(unittest.TestCase):
+    def test_failed_vacuum_preflight_prevents_first_motion(self):
+        from unittest.mock import Mock
+        arm, vacuum = Mock(), Mock()
+        vacuum.prepare.side_effect = ConnectionError('gripper unavailable')
+        sorter = Sorter(arm, vacuum, threading.Event())
+        with self.assertRaisesRegex(ConnectionError, 'gripper unavailable'):
+            sorter.home()
+        arm.pose.assert_called_once()
+        arm.move.assert_not_called()
+        vacuum.off.assert_not_called()
+
     def test_state_reads_reuse_connection_and_drain_older_packets(self):
         arm = URSocket(Settings(), threading.Event())
         reader, writer = socket.socketpair()
@@ -38,6 +49,8 @@ class RobotTests(unittest.TestCase):
             def close(self):
                 pass
         class Vacuum:
+            def prepare(self):
+                pass
             def on(self):
                 events.append(('on', None))
             def off(self):

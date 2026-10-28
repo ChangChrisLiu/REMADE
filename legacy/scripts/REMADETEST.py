@@ -85,9 +85,9 @@ def move_to_tcp(target_tcp):
         tool_acc, tool_vel)
     # tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # tcp_socket.connect((HOST, PORT))
-    tcp_socket.send(str.encode(tcp_command))  # 利用字符串的encode方法编码成bytes，默认为utf-8类型
+    tcp_socket.send(str.encode(tcp_command))  # Encode the command as bytes using the default UTF-8 encoding.
     # tcp_socket.close()
-    # 确保已达到目标点，就可以紧接着发送下一条指令
+    # Wait until the target is reached before sending the next command.
     actual_pos = get_current_tcp()
     target_rpy = util.rv2rpy(target_tcp[3], target_tcp[4], target_tcp[5])
     rpy = util.rv2rpy(actual_pos[3], actual_pos[4], actual_pos[5])
@@ -173,9 +173,9 @@ def move_to_tcp_with_vacuum_on(target_tcp):
         tool_acc, tool_vel)
     # tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # tcp_socket.connect((HOST, PORT))
-    tcp_socket.send(str.encode(tcp_command))  # 利用字符串的encode方法编码成bytes，默认为utf-8类型
+    tcp_socket.send(str.encode(tcp_command))  # Encode the command as bytes using the default UTF-8 encoding.
     # tcp_socket.close()
-    # 确保已达到目标点，就可以紧接着发送下一条指令
+    # Wait until the target is reached before sending the next command.
     time.sleep(0.01)
     Vacuumon()
     actual_pos = get_current_tcp()
@@ -202,9 +202,9 @@ def move_to_tcp_with_vacuum_off(target_tcp):
         tool_acc, tool_vel)
     # tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # tcp_socket.connect((HOST, PORT))
-    tcp_socket.send(str.encode(tcp_command))  # 利用字符串的encode方法编码成bytes，默认为utf-8类型
+    tcp_socket.send(str.encode(tcp_command))  # Encode the command as bytes using the default UTF-8 encoding.
     # tcp_socket.close()
-    # 确保已达到目标点，就可以紧接着发送下一条指令
+    # Wait until the target is reached before sending the next command.
     time.sleep(0.01)
     Vacuumoff()
     actual_pos = get_current_tcp()
@@ -227,9 +227,9 @@ def move_to_tcp_slow(target_tcp):
         tool_acc, tool_vel)
     # tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # tcp_socket.connect((HOST, PORT))
-    tcp_socket.send(str.encode(tcp_command))  # 利用字符串的encode方法编码成bytes，默认为utf-8类型
+    tcp_socket.send(str.encode(tcp_command))  # Encode the command as bytes using the default UTF-8 encoding.
     # tcp_socket.close()
-    # 确保已达到目标点，就可以紧接着发送下一条指令
+    # Wait until the target is reached before sending the next command.
     actual_pos = get_current_tcp()
     target_rpy = util.rv2rpy(target_tcp[3], target_tcp[4], target_tcp[5])
     rpy = util.rv2rpy(actual_pos[3], actual_pos[4], actual_pos[5])
@@ -398,7 +398,7 @@ def ObjectDetection(img):
     # print(position_np)
     # print(classes_np)
     # np.set_printoptions(precision=6, floatmode='fixed')
-    # 只提取 position_np 的前两个数据
+    # Extract the first two columns of position_np.
     position_first = 1920 * position_np[:, 0]
     position_first = position_first.reshape(-1,1)
     print(position_first)
@@ -408,10 +408,10 @@ def ObjectDetection(img):
     print(position_second)
     position_first_two = np.hstack((position_first,position_second))
 
-# 将 classes_np 重塑为列向量，以便与 position_first_two 进行合并
+# Reshape classes_np into a column vector for joining with position_first_two.
     classes_np_column = classes_np.reshape(-1, 1)
 
-# 将 classes_np 与 position_first_two 水平合并
+# Join classes_np and position_first_two horizontally.
     result_matrix = np.hstack((classes_np_column, position_first_two))
     # np.set_printoptions(suppress=True, precision=6, floatmode='fixed')
     print(result_matrix)
@@ -466,7 +466,7 @@ def Image2TCP(img):
 
     rows = Detection_Result.shape[0]
 
-    # 创建一个新矩阵，初始化为原矩阵的第一列
+    # Initialize a new matrix with the first column of the original matrix.
     new_matrix = np.zeros((rows, 7))
     new_matrix[:, 0] = Detection_Result[:, 0]
 
@@ -481,7 +481,7 @@ def Image2TCP(img):
         new_values_base_H = np.dot(Base_Calobration_Trans,new_values_calibration_H)
         new_values_base = new_values_base_H[0:3]
         new_values_base = new_values_base.reshape(1,3)
-    # 将新值填入矩阵的第二到第四列
+    # Fill columns two through four with the new values.
         new_matrix[i, 1:4] = new_values_base/1000
         new_matrix[i, 3:7] = [0, 2.18204119, -2.20759957,  0.06040668]
         # print(new_matrix)

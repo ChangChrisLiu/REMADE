@@ -44,6 +44,35 @@ def detect(frame):
 
 
 class MonitorTests(unittest.TestCase):
+    def test_worker_keyboard_interrupt_does_not_repeat_a_completed_future(self):
+        from concurrent.futures import Future
+        from unittest.mock import Mock, patch
+        executor = Mock()
+        executor.shutdown.side_effect = [None, AssertionError('shutdown repeated')]
+        future = Future()
+        future.set_exception(KeyboardInterrupt())
+        executor.submit.return_value = future
+        robot, camera, display = Mock(), Camera(), Display(count=1)
+        with patch('remade.monitor.ThreadPoolExecutor', return_value=executor):
+            with self.assertRaises(KeyboardInterrupt):
+                run_monitor(camera, detect, display, robot)
+        self.assertEqual(executor.shutdown.call_count, 1)
+        robot.close.assert_called_once()
+        self.assertTrue(camera.closed and display.closed)
+
+    def test_interrupt_during_worker_shutdown_still_closes_resources(self):
+        from unittest.mock import Mock, patch
+        executor = Mock()
+        executor.shutdown.side_effect = [KeyboardInterrupt(), None]
+        executor.submit.return_value.done.return_value = False
+        robot, camera, display = Mock(), Camera(), Display(count=1)
+        with patch('remade.monitor.ThreadPoolExecutor', return_value=executor):
+            with self.assertRaises(KeyboardInterrupt):
+                run_monitor(camera, detect, display, robot)
+        self.assertEqual(executor.shutdown.call_count, 2)
+        robot.close.assert_called_once()
+        self.assertTrue(camera.closed and display.closed)
+
     def test_preview_continues_for_multiple_frames_and_closes(self):
         camera, display = Camera(), Display()
         run_monitor(camera, detect, display)

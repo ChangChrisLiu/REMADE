@@ -2,7 +2,7 @@
 
 Real-time visual monitoring and robot-assisted sorting of end-of-life phone components, built around a UR5e, an Intel RealSense camera and an OnRobot VGC10 vacuum gripper.
 
-[中文项目说明](README.zh-CN.md) · [Documentation](docs/README.md) · [Code review](docs/CODE_REVIEW.md) · [Paper-to-code mapping](docs/PAPER_MAPPING.md)
+[Documentation](docs/README.md) · [Connection workflow](docs/CONNECTION_WORKFLOW.md) · [Code review](docs/CODE_REVIEW.md) · [Paper-to-code mapping](docs/PAPER_MAPPING.md)
 
 `REMADEDEMO.py` is the maintained entry point. It continuously captures images, runs YOLO and displays labeled detections with measured FPS. With `--sort`, one robot worker picks a component and returns home while monitoring continues. The next target comes from a fresh image after the robot returns.
 
@@ -43,6 +43,8 @@ references/        third-party source snapshots with original notices
 ```
 
 Every original file is accounted for in the [migration manifest](docs/inventory/migration.csv). Original experiments are archived, not collected as automated tests. Reference snapshots are ordinary files, so a regular clone includes their source.
+
+Documentation and source comments are in English. Translated archives retain their original snapshots in Git and separate original/current hashes. The [connection workflow](docs/CONNECTION_WORKFLOW.md) traces startup checks, continuous vision, coordinate conversion, robot/vacuum commands and shutdown. Offline integration tests exercise this complete software chain through simulated device boundaries.
 
 ## Classes
 

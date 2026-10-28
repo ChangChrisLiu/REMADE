@@ -84,7 +84,7 @@ import cv2
 #  ********************************************TEST02**********************************************
 
 
-# 获取摄像头的内参是为了将像素坐标转化成实际坐标
+# Camera intrinsics convert pixel coordinates to physical coordinates.
 
 pipeline = rs.pipeline()
 config = rs.config()
@@ -94,7 +94,7 @@ profile = pipeline.start(config)
 frames = pipeline.wait_for_frames()
 depth = frames.get_depth_frame()
 color = frames.get_color_frame()
-# 获取内参
+# Obtain camera intrinsics.
 depth_profile = depth.get_profile()
 print(depth_profile)
 # <pyrealsense2.video_stream_profile: 1(0) 640x480 @ 30fps 1>

@@ -17,6 +17,35 @@ class Client:
 
 
 class VacuumTests(unittest.TestCase):
+    def test_preflight_reads_controller_without_changing_vacuum(self):
+        client = Client()
+        reads = []
+        def read(**kwargs):
+            reads.append(kwargs)
+            return type('Response', (), {'isError': lambda self: False, 'registers': [500]})()
+        client.read_holding_registers = read
+        vacuum = VacuumController(Settings(), 'test-device', lambda **kwargs: client)
+        try:
+            vacuum.prepare()
+            self.assertEqual(reads, [{'address': 2, 'count': 1, 'unit': 65}])
+            self.assertEqual(client.writes, [])
+        finally:
+            vacuum.close()
+
+    def test_preflight_rejects_missing_or_malformed_register_response(self):
+        for response in (None, type('Response', (), {'isError': lambda self: True})(),
+                         type('Response', (), {'isError': lambda self: False, 'registers': []})()):
+            with self.subTest(response=response):
+                client = Client()
+                client.read_holding_registers = lambda **kwargs: response
+                vacuum = VacuumController(Settings(), 'test-device', lambda **kwargs: client)
+                try:
+                    with self.assertRaises(ConnectionError):
+                        vacuum.prepare()
+                    self.assertEqual(client.writes, [])
+                finally:
+                    vacuum.close()
+
     def test_pressure_and_release_commands_use_both_channels(self):
         client = Client()
         vacuum = VacuumController(Settings(vacuum_percent=60), serial_device='test-device',

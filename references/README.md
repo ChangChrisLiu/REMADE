@@ -1,6 +1,6 @@
 # Third-party references
 
-This directory contains the existing local source snapshots of three reference repositories, including local edits that predated the REMADE reorganization. Their original README files, source notices and license files are retained.
+This directory contains the existing local source snapshots of three reference repositories, including local edits that predated the REMADE reorganization. Source notices and license files are retained. The English update translates comments and consolidates the bilingual RG2 README; original text remains in Git commit `0358cac7fcff1f2dd9bf7c0e0ba79e3eb9fb289b`. The migration manifest records these editorial transformations separately.
 
 | Snapshot | Upstream |
 |---|---|

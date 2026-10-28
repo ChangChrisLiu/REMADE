@@ -19,7 +19,7 @@ def main():
         except (SyntaxError, UnicodeError) as exc:
             failures.append(f'{path.relative_to(ROOT)}: {exc}')
     for name, path_column, hash_column in [
-        ('migration.csv', 'current_path', 'sha256_canonical'),
+        ('migration.csv', 'current_path', 'sha256_current'),
         ('assets.csv', 'path', 'sha256_canonical'),
     ]:
         with (ROOT / 'docs' / 'inventory' / name).open(encoding='utf-8', newline='') as stream:
@@ -51,6 +51,15 @@ def main():
         if mode == '160000':
             failures.append(f'unexpected gitlink: {path}')
         name = entry.split('\t')[-1]
+        source_path = ROOT / name
+        if source_path.is_file():
+            try:
+                content = source_path.read_text(encoding='utf-8-sig')
+            except UnicodeError:
+                pass  # Binary assets are verified by the asset manifest.
+            else:
+                if re.search(r'[\u3400-\u9fff]', content):
+                    failures.append(f'non-English CJK text in tracked file: {name}')
         if any(part in {'.git', '.idea', '__pycache__', '.codex-work', '.venv'} for part in Path(name).parts):
             failures.append(f'local metadata staged: {name}')
     if failures:

@@ -1,14 +1,14 @@
 import subprocess
 import time
 
-# 指定.sh文件的路径
+# Specify the shell script path.
 sh_file_path = 'VacuumOnscript.sh'
 # sh_file_path = 'VacuumOffscript.sh'
 
-# 使用subprocess.run来执行.sh文件
+# Execute the shell script with subprocess.run.
 result = subprocess.run(['bash', sh_file_path], capture_output=True, text=True)
 
-# 输出执行结果
+# Print the execution result.
 print("Standard Output:", result.stdout)
 print("Standard Error:", result.stderr)
 print("Return Code:", result.returncode)

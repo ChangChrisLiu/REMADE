@@ -140,7 +140,7 @@ path_pose3 = Test3_Joint.tolist() + [velocity, acceleration, blend_3]
 path = [path_pose1, path_pose2, path_pose3]
 print(path)
 
-# # 发送带有混合的路径
+# # Send a path with blending.
 # rtde_c.moveJ(path, asynchronous=False)
 
 

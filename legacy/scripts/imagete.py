@@ -48,7 +48,7 @@ def ObjectDetection(img):
     # print(position_np)
     # print(classes_np)
     # np.set_printoptions(precision=6, floatmode='fixed')
-    # 只提取 position_np 的前两个数据
+    # Extract the first two columns of position_np.
     position_first = 1920 * position_np[:, 0]
     position_first = position_first.reshape(-1,1)
     print(position_first)
@@ -58,10 +58,10 @@ def ObjectDetection(img):
     print(position_second)
     position_first_two = np.hstack((position_first,position_second))
 
-# 将 classes_np 重塑为列向量，以便与 position_first_two 进行合并
+# Reshape classes_np into a column vector for joining with position_first_two.
     classes_np_column = classes_np.reshape(-1, 1)
 
-# 将 classes_np 与 position_first_two 水平合并
+# Join classes_np and position_first_two horizontally.
     result_matrix = np.hstack((classes_np_column, position_first_two))
     # np.set_printoptions(suppress=True, precision=6, floatmode='fixed')
     print(result_matrix)

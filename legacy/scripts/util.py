@@ -1,7 +1,7 @@
 import numpy as np
 
 
-# 旋转矢量转旋转矩阵
+# Convert a rotation vector to a rotation matrix.
 def rv2rm(rx, ry, rz):
     theta = np.linalg.norm([rx, ry, rz])
     kx = rx / theta
@@ -28,7 +28,7 @@ def rv2rm(rx, ry, rz):
     return R
 
 
-# 旋转矩阵转rpy
+# Convert a rotation matrix to roll, pitch and yaw.
 def rm2rpy(R):
     sy = np.sqrt(R[0][0] * R[0][0] + R[1][0] * R[1][0])
     singular = sy < 1e-6
@@ -45,7 +45,7 @@ def rm2rpy(R):
     return np.asarray([x, y, z])
 
 
-# rpy转旋转矩阵
+# Convert roll, pitch and yaw to a rotation matrix.
 def rpy2rm(rpy):
     # Rx = np.zeros((3, 3), dtype=rpy.dtype)
     # Ry = np.zeros((3, 3), dtype=rpy.dtype)
@@ -78,7 +78,7 @@ def rpy2rm(rpy):
     return R0
 
 
-# 旋转矩阵转旋转矢量
+# Convert a rotation matrix to a rotation vector.
 def rm2rv(R):
     theta = np.arccos((R[0][0] + R[1][1] + R[2][2] - 1) / 2)
     K = (1 / (2 * np.sin(theta))) * np.asarray([R[2][1] - R[1][2], R[0][2] - R[2][0], R[1][0] - R[0][1]])

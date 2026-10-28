@@ -1,6 +1,6 @@
 # Historical experiments
 
-These are the original project-owned files, preserved without source edits during the REMADE reorganization. Git may normalize text line endings; the migration manifest records both original and normalized hashes. Use the maintained [REMADEDEMO.py](../REMADEDEMO.py) entry point instead.
+These are the original project-owned files. The English update translates comments without changing executable Python ASTs. Original sources remain in Git commit `0358cac7fcff1f2dd9bf7c0e0ba79e3eb9fb289b`; the migration manifest records original and current hashes separately. Git may normalize text line endings. Use the maintained [REMADEDEMO.py](../REMADEDEMO.py) entry point.
 
 - `scripts/`: original root scripts and shell wrappers.
 - `trajectory_tools/`: former `04/`, including original and converted paths.

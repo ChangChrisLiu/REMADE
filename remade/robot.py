@@ -11,14 +11,20 @@ from .geometry import detections_to_poses, rotation_error
 from .monitor import StopRequested
 
 
-def read_tcp_pose(connection, timeout=3.0):
+def read_tcp_pose(connection, timeout=3.0, check_stop=None):
     deadline = time.monotonic() + timeout
     def exact(size):
         data = bytearray()
         while len(data) < size:
+            if check_stop is not None:
+                check_stop()
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError('robot state packet did not arrive before the deadline')
+            connection.settimeout(remaining)
+            chunk = connection.recv(size - len(data))
             if time.monotonic() >= deadline:
                 raise TimeoutError('robot state packet did not arrive before the deadline')
-            chunk = connection.recv(size - len(data))
             if not chunk:
                 raise ConnectionError('robot closed the state connection')
             data.extend(chunk)
@@ -60,7 +66,7 @@ class URSocket:
                 raise TimeoutError('could not obtain a current robot state packet')
             self.command_socket.settimeout(remaining)
             try:
-                pose = read_tcp_pose(self.command_socket, remaining)
+                pose = read_tcp_pose(self.command_socket, remaining, self.check_stop)
             finally:
                 self.command_socket.settimeout(self.settings.socket_timeout)
             if not select.select([self.command_socket], [], [], 0)[0]:
@@ -106,6 +112,7 @@ class Sorter:
         self.arm = arm
         self.vacuum = vacuum
         self.stop_event = stop_event
+        self.prepared = False
 
     def check_stop(self):
         if self.stop_event.is_set():
@@ -113,6 +120,12 @@ class Sorter:
 
     def home(self):
         self.check_stop()
+        if not self.prepared:
+            self.arm.pose()
+            self.check_stop()
+            self.vacuum.prepare()
+            self.check_stop()
+            self.prepared = True
         self.arm.move(HOME)
         self.check_stop()
         self.vacuum.off()

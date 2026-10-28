@@ -54,6 +54,17 @@ class VacuumController:
             self.close()
             raise
 
+    def prepare(self):
+        """Check the controller with a read only; preserve any held part."""
+        self._connect()
+        response = self.client.read_holding_registers(address=2, count=1, unit=65)
+        if response is None or response.isError():
+            raise ConnectionError('vacuum controller did not answer the startup register read')
+        registers = getattr(response, 'registers', None)
+        if not isinstance(registers, (list, tuple)) or len(registers) != 1 or \
+                not isinstance(registers[0], int) or not 0 <= registers[0] <= 65535:
+            raise ConnectionError('vacuum controller returned an invalid startup register response')
+
     def _write(self, value):
         self._connect()
         response = self.client.write_registers(address=0, values=[value, value], unit=65)

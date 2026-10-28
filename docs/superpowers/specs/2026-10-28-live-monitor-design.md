@@ -1,15 +1,17 @@
-# REMADEDEMO 实时监测设计
+# REMADEDEMO live-monitor design
 
-用户指定以 REMADEDEMO 为主入口，图像需要实时监测。原版只拍摄一次，分拣动作同步阻塞，并在导入时连接机器人。
+The user selected REMADEDEMO as the maintained entry point and required real-time image monitoring. The original captured once, blocked during sorting and connected to the robot at import time.
 
-采用现有 Python/OpenCV/RealSense/YOLO 技术栈：主线程持续采集、推理、显示；单个工作线程串行执行机器人归位与一批分拣。相机只启动一次，模型只加载一次。动作期间继续刷新画面，机器人归位后清空缓存帧，再采集新一轮目标，避免将运动期间的检测作为下一轮目标。
+Keep the existing Python/OpenCV/RealSense/YOLO stack. Capture, inference and display run on the main thread; one worker serializes homing and sorting. Start the camera once and load the model once. Continue displaying frames during motion, discard buffered frames after homing and obtain a new observation before selecting another target.
 
-考虑过只增加 while 循环，但机械臂动作期间仍会冻结画面；也考虑独立进程，但会增加状态与退出协调成本。采用单工作线程方案是实现选择。
+A simple loop alone would still block during motion. A separate process would add state and shutdown coordination. A single worker thread meets the present scope.
 
-默认运行实时监测；加 --sort 才连接机器人进行循环分拣。q、Esc 或关闭窗口结束监测；分拣模式发送停止请求并等待当前工作线程退出，保留吸附状态，避免主动释放在途工件。软件停止不替代硬件急停。
+Default to monitoring. Only --sort enables robot connections and motion. Q, Esc and window closure request shutdown; the worker stops cooperatively, and cleanup retains vacuum state rather than releasing a potentially held component. Software stopping does not replace an equipment emergency stop.
 
-保留原有标定、分类规则和工位。采用旧脚本注释中的较低运动参数（0.2 m/s、0.5 m/s²）和历史夹具实验的 60% 真空目标，这些是实现选择，需要实机验证。新代码维护主入口，其他实验入口归档。相机断开、推理错误、机器人错误应停止新任务并释放资源。实际帧率由相机与推理耗时决定，界面显示测得 FPS，不承诺硬实时。
+Retain the original calibration, classes and stations. Use the historical lower motion settings of 0.2 m/s and 0.5 m/s squared, and the historical gripper experiment's 60% vacuum target. These implementation choices need laboratory validation. Camera, inference and robot failures stop new work and close resources. Display measured FPS without claiming hard real-time performance.
 
-后续用户明确要求全项目 review 和结构化代码，因此主流程拆为 config、geometry、robot、vacuum、vision、monitor、app 七个模块；保留全部原文件及迁移记录。每轮只抓取一个目标并归位，然后获取新图像，避免堆叠场景中的旧目标继续执行。
+The user subsequently requested a complete review and structured code. Split the runtime into config, geometry, robot, vacuum, vision, monitor and app modules. Archive originals with a migration record. Pick one target per observation and return home before recapturing to avoid stale targets in stacked scenes.
 
-验证使用离线相机/模型/机器人边界替身：画面持续刷新、动作不重入、归位后新帧、空检测、错误传播、退出清理、完整 TCP 包读取。实机标定、抓取和延迟测量需要实验设备。
+The English/workflow update adds a first-frame inference/display check and read-only robot/vacuum connection checks before initial motion. The preparation image never becomes a pick target. Documentation and archived comments are English; original snapshots remain in Git with separate original/current hashes.
+
+Offline tests cover continuous display, serialized motion, fresh frames, empty detections, error propagation, cancellation, cleanup, complete TCP packet reads and application-level integration through simulated device boundaries. Physical calibration, grasping and latency measurements require laboratory equipment.

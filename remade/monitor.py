@@ -42,15 +42,25 @@ def run_monitor(camera, detector, display, robot=None, stop_event=None):
     finally:
         stop.set()
         if executor is not None:
-            executor.shutdown(wait=True)
-            if future is not None:
+            # Defer repeated Ctrl+C until the cooperative worker has exited;
+            # resources must not be closed underneath a running robot task.
+            while True:
                 try:
-                    future.result()
-                except StopRequested:
-                    pass
-                except BaseException as exc:
+                    executor.shutdown(wait=True)
+                    if future is not None:
+                        future.result()
+                    break
+                except KeyboardInterrupt as exc:
                     if failure is None:
                         failure = exc
+                    # A worker can itself finish with KeyboardInterrupt. Its
+                    # completed future will raise it forever, so do not retry.
+                    if future is not None and future.done():
+                        break
+                except BaseException as exc:
+                    if not isinstance(exc, StopRequested) and failure is None:
+                        failure = exc
+                    break
         for resource in (robot, camera, display):
             if resource is not None:
                 try:

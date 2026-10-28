@@ -13,10 +13,10 @@ def python_files():
 
 
 def render():
-    rows = ['# Python 代码索引', '',
-            '由 `python tools/build_code_index.py` 从语法树生成。仅解析文本，不导入或执行模块。', '',
-            '历史脚本和参考仓库中的 test 文件不是自动化测试；正式测试位于 `tests/`。', '',
-            '| 文件 | 行数 | 定义（名称:行号） |', '|---|---:|---|']
+    rows = ['# Python source index', '',
+            'Generated from syntax trees by `python tools/build_code_index.py`; modules are never imported or executed.', '',
+            'Test-named files in historical scripts and reference snapshots are hardware experiments. Automated tests live in `tests/`.', '',
+            '| File | Lines | Definitions (name:line) |', '|---|---:|---|']
     for path in python_files():
         source = path.read_text(encoding='utf-8-sig')
         tree = ast.parse(source, filename=str(path))

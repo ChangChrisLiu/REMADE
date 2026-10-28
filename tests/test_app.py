@@ -10,6 +10,20 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class AppTests(unittest.TestCase):
+    def test_first_inference_failure_never_constructs_robot(self):
+        from remade.app import main
+        from unittest.mock import Mock
+        camera, display = Mock(), Mock()
+        detector = Mock(side_effect=RuntimeError('first inference failed'))
+        with patch('remade.app.Detector', return_value=detector), \
+             patch('remade.app.OpenCVDisplay', return_value=display), \
+             patch('remade.app.RealSenseStream', return_value=camera), \
+             patch('remade.app.URSocket') as arm, redirect_stderr(StringIO()):
+            self.assertEqual(main(['--sort']), 1)
+        arm.assert_not_called()
+        camera.close.assert_called_once()
+        display.close.assert_called_once()
+
     def test_help_runs_without_camera_model_or_robot_sdks(self):
         result = subprocess.run([sys.executable, str(ROOT / 'REMADEDEMO.py'), '--help'],
                                 capture_output=True, text=True, timeout=10)
