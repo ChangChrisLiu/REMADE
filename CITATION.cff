@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "For the related research system, please cite the RAISE paper below."
+title: "REMADE: real-time phone-component monitoring and robotic sorting"
+type: software
+version: 0.1.0
+repository-code: "https://github.com/ChangChrisLiu/REMADE"
+authors:
+  - family-names: Liu
+    given-names: Chang
+preferred-citation:
+  type: article
+  title: "RAISE: A Robot-Assisted SelectIve Disassembly and Sorting System for End-of-Life Phones"
+  authors:
+    - family-names: Liu
+      given-names: Chang
+    - family-names: Balasubramaniam
+      given-names: Badrinath
+    - family-names: Yancey
+      given-names: Neal A.
+    - family-names: Severson
+      given-names: Michael H.
+    - family-names: Shine
+      given-names: Adam
+    - family-names: Bove
+      given-names: Philip
+    - family-names: Li
+      given-names: Beiwen
+    - family-names: Liang
+      given-names: Xiao
+    - family-names: Zheng
+      given-names: Minghui
+  journal: "Resources, Conservation & Recycling"
+  volume: 225
+  year: 2026
+  doi: "10.1016/j.resconrec.2025.108609"

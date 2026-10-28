@@ -1,0 +1,41 @@
+[
+  {
+    "path": "references/arws",
+    "upstream_url": "https://github.com/Now4czyk/arws.git",
+    "base_commit": "633ee0ddda069445679137053da00f48ac81c9cb",
+    "preexisting_local_changes": [
+      "D src/Universal_Robots_ROS2_Driver/.github/dockerursim/.vol/default.installation",
+      " M src/Universal_Robots_ROS2_Driver/.github/dockerursim/.vol/programs.UR5",
+      " M src/Universal_Robots_ROS2_Driver/.github/dockerursim/build_and_run_docker_ursim.sh",
+      " M src/Universal_Robots_ROS2_Driver/ur_bringup/launch/ur_dashboard_client.launch.py",
+      " M src/Universal_Robots_ROS2_Driver/ur_bringup/scripts/start_ursim.sh",
+      " M src/Universal_Robots_ROS2_Driver/ur_robot_driver/launch/ur_dashboard_client.launch.py",
+      " M src/Universal_Robots_ROS2_Driver/ur_robot_driver/scripts/start_ursim.sh",
+      " M src/Universal_Robots_ROS2_Driver/ur_robot_driver/scripts/tool_communication.py",
+      " M src/Universal_Robots_ROS2_Driver/ur_robot_driver/scripts/wait_dashboard_server.sh",
+      " M src/Universal_Robots_ROS2_Driver/ur_robot_driver/test/dashboard_client.py",
+      " M src/Universal_Robots_ROS2_Driver/ur_robot_driver/test/urscript_interface.py",
+      " M src/camera_control/camera_control/scripts/deprecated.py",
+      " M src/camera_control/camera_control/scripts/depthai-camera-usage.py",
+      " M src/camera_control/camera_control/scripts/yolo.py",
+      "?? src/Universal_Robots_ROS2_Driver/.github/dockerursim/.vol/default.installation.gz"
+    ],
+    "publication": "file snapshot including local changes; nested Git history remains local"
+  },
+  {
+    "path": "references/UR5-control-with-RG2",
+    "upstream_url": "https://github.com/gouxiangchen/UR5-control-with-RG2.git",
+    "base_commit": "049795ff4ef8b34638afcce0336f4aeeb9f7b1ba",
+    "preexisting_local_changes": [
+      "M test_main.py"
+    ],
+    "publication": "file snapshot including local changes; nested Git history remains local"
+  },
+  {
+    "path": "references/UR5-robotiq85-D435_control_by_python",
+    "upstream_url": "https://github.com/littlefiveRobot/UR5-robotiq85-D435_control_by_python.git",
+    "base_commit": "8f7f58972b736a85fd2a812e91d464a3de86751e",
+    "preexisting_local_changes": [],
+    "publication": "file snapshot including local changes; nested Git history remains local"
+  }
+]

@@ -1,0 +1,2 @@
+ros2 launch ur_robot_driver ur_control.launch.py ur_type:=ur5e robot_ip:=169.254.99.10 use_tool_communication:=true use_mock_hardware:=false launch_rviz:=false
+ros2 launch ur_robot_driver ur_control.launch.py ur_type:=ur5e robot_ip:=192.168.56.101

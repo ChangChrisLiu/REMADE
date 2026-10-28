@@ -1,0 +1,26 @@
+# Local environments, caches and editor state
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.idea/
+.vscode/
+.pytest_cache/
+.ruff_cache/
+.codex-work/
+.superpowers/
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+
+# Generated experiment and ROS build output
+runs/
+build/
+install/
+log/
+*.log
+
+# Original nested Git histories stay local; their source snapshots are tracked.
+**/.git/
