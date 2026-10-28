@@ -188,10 +188,14 @@ class WorkflowTests(unittest.TestCase):
                 np.testing.assert_allclose(device.moves[5][:3], [*destination[:2], .1])
                 np.testing.assert_allclose(device.moves[-1], HOME)
                 self.assertEqual(device.writes, [[0, 0], [316, 316], [0, 0], [0, 0]])
-                release = [i for i, item in enumerate(device.events)
+                # Inference deliberately continues on another thread and may
+                # interleave between a state read and the vacuum command.
+                control_events = [item for item in device.events
+                                  if not isinstance(item, str) or item != 'inference']
+                release = [i for i, item in enumerate(control_events)
                            if isinstance(item, tuple) and item[0] == 'vacuum' and item[1] == [0, 0]][1]
                 # The last confirmed state is read before the destination release.
-                self.assertEqual(device.events[release - 1], 'robot state')
+                self.assertEqual(control_events[release - 1], 'robot state')
                 first_move = next(i for i, item in enumerate(device.events) if isinstance(item, tuple))
                 self.assertLess(device.events.index('vacuum read'), first_move)
                 self.assertLess(device.events.index('inference'), device.events.index('robot connect'))
